@@ -1,36 +1,29 @@
 #pragma once
 #include <iostream>
 #include <string>  
+#include <iosfwd>
+#include <sstream>
 
 struct FVector
 {
-	//Variabels
-	float X;
-	float Y;
-	float Z;
-
 	//Constructors
 	FVector();
 	FVector(float InF);
-	FVector(float InX, float InY, float InZ);
+	FVector(float InX, float InY, float InZ);	
 	
-	//Functions
-	std::string ToString();
-	void PrintVector();
-
 	//Constants
-	FVector LeftVector();
-	FVector RightVector();
-	FVector DownVector();
-	FVector ForwardVector();
-	FVector BeckwardVector();
-	FVector OneVector();
-	FVector ZeroVector();
+	static const FVector LeftVector;
+	static const FVector RightVector;
+	static const FVector DownVector;
+	static const FVector ForwardVector;
+	static const FVector BeckwardVector;
+	static const FVector OneVector;
+	static const FVector ZeroVector;
 
 	///Operators
 
 	//Get a negated copy of the vector.
-	FVector  	operator-();
+	FVector  operator-();
 	
 	//Gets the result of component - wise subtraction of this by another vector.
 	FVector operator- (const FVector& v);
@@ -74,20 +67,41 @@ struct FVector
 	//Calculate cross product between this and another vector.
 	FVector operator^ (const FVector& v);
 
+	//Calculate the dot product between this and another vector.
+	float operator| (FVector& v);
+
 	//Gets the result of component-wise addition of this and another vector.
 	FVector operator+ (const FVector& v);
 
 	//Gets the result of adding to each component of the vector.
 	FVector operator+ (float InF);
+
+	//Check against another vector for equality.
+	bool operator== (FVector& v);
+
+
+		///Functions
+	std::string ToString();
+	void PrintVector();
+
+	//Checks whether all components of this vector are the same, within a tolerance.
+	bool AllComponentsEqual(float value) const;
+
+	//Get distance
+	static float Distance(FVector& v1, FVector v2);
+
+	//Variabels
+	float X;
+	float Y;
+	float Z;
 };
 
 int main()
 {
-	FVector v(7,3,-4);
-	FVector b(1,0,6);
-	FVector x = v ^ b;
-	
-	x.PrintVector();
+	FVector v(7, 3, -4);
+	FVector b(1, 0, 6);
+	float a = FVector::Distance(v,b);
+	std::cout <<a ;
 	
 }
 

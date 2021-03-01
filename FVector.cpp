@@ -1,27 +1,32 @@
 #include "FVector.h"
+#include <corecrt_math.h>
+
 
 FVector::FVector()
+	:X(0.f), Y(0.f),	Z(0.f)
 {
 
 }
 
 FVector::FVector(float InX, float InY, float InZ)
+	:X(InX), Y(InY), Z(InZ)
 {
-	X = InX; Y = InY; Z = InZ;
+	
 }
 
 FVector::FVector(float InF)
+	: X(InF), Y(InF), Z(InF)
 {
-	X = InF; Y = InF; Z = InF;
+
 }
 
 std::string FVector::ToString()
 {
-	std::string X_String = std::to_string(X);
-	std::string Y_String = std::to_string(Y);
-	std::string Z_String = std::to_string(Z);
+	std::stringstream _str;
+	_str << "X = " << std::to_string(X) << " Y = " << std::to_string(Y) << " Z = ", std::to_string(Z);
+	const std::string string_Vector = _str.str();
 
-	return "X = " + X_String + "  " + " Y = " + Y_String + "  " + " Z = " +Z_String;
+	return string_Vector;
 }
 
 void FVector::PrintVector()
@@ -29,47 +34,24 @@ void FVector::PrintVector()
 	std::cout << "X = " << X << " Y = " << Y << " Z = " << Z <<std::endl;
 }
 
-FVector FVector::LeftVector()
+bool FVector::AllComponentsEqual(float value) const
 {
-	static const FVector L_Vector(0, -1, 0);
-	return L_Vector;
+	return X-Y <= value && Y - Z <=value && X-Z <= value;
 }
 
-FVector FVector::RightVector()
+float FVector::Distance(FVector& v1, FVector v2)
 {
-	static const FVector R_Vector(0, 1, 0);
-	return R_Vector;
+	float a = sqrt((std::powf(v2.X - v1.X, 2)) + (std::powf(v2.Y - v1.Y, 2)) + (std::powf(v2.Z - v1.Z, 2)));
+	return a;
 }
 
-FVector FVector::DownVector()
-{
-	static const FVector D_Vector(0, 0, -1);
-	return D_Vector;
-}
-
-FVector FVector::ForwardVector()
-{
-	static const FVector F_Vector(1, 0, 0);
-	return F_Vector;
-}
-
-FVector FVector::BeckwardVector()
-{
-	static const FVector D_Vector(-1, 0, 0);
-	return D_Vector;
-}
-
-FVector FVector::OneVector()
-{
-	FVector One_Vector(1);
-	return One_Vector;
-}
-
-FVector FVector::ZeroVector()
-{
-	FVector One_Vector(0);
-	return One_Vector;
-}
+const FVector FVector::LeftVector = FVector(0, -1, 0);
+const FVector FVector::RightVector = FVector(0, 1, 0);
+const FVector FVector::DownVector = FVector(0, 0, -1);
+const FVector FVector::ForwardVector = FVector(1, 0, 0);
+const FVector FVector::BeckwardVector = FVector(-1, 0, 0);
+const FVector FVector::OneVector = FVector(1);
+const FVector FVector::ZeroVector = FVector(0);
 
 bool FVector::operator!=(const FVector& v)
 {
@@ -144,57 +126,53 @@ FVector FVector::operator/=(const FVector& v)
 	return FVector(X /= v.X, Y /= v.Y, Z /= v.Z);
 }
 
-float& FVector::operator[](int i)
+float& FVector::operator[](int index)
 {
-	if(i == 0)
+	
+	switch (index)
 	{
+	case 1:
 		return X;
-	}
-	else if(i == 1)
-	{
+
+	case  2:
 		return Y;
-	}
-	else if(i == 2)
-	{
+
+	case 3:
 		return Z;
-	}
-	else if(i < 0 || i > 2)
-	{
-		float zero = 0;
-		std::cout << "thi is 3D vector" << std::endl;
-		return zero;
+
+	default:
+		break;
 	}
 }
 
-float FVector::operator[](int indexi) const
+float FVector::operator[](int index) const
 {
-	if (indexi == 0)
+	switch (index)
 	{
-		return X;
-	}
-	else if (indexi == 1)
-	{
+	case 1:
+		return X;		
+	
+	case  2:
 		return Y;
-	}
-	else if (indexi == 2)
-	{
+	
+	case 3:
 		return Z;
-	}
-	else if (indexi < 0 || indexi > 2)
-	{
-		float zero = 0;
-		std::cout << "thi is 3D vector" << std::endl;
-		return zero;
+	
+	default:
+		break;
 	}
 } 
 
 FVector FVector::operator^(const FVector& v)
 {
 	const FVector cross_product(Y * v.Z - Z * v.Y, Z * v.X - X * v.Z, X * v.Y - Y * v.X);
-	cross_product.X;
-	cross_product.Y;
-	cross_product.Z;
 	return cross_product;
+}
+
+float FVector::operator|(FVector& v)
+{
+	float dot_product = X * v.X + Y * v.Y + Z * v.Z;
+	return dot_product;
 }
 
 FVector FVector::operator+(const FVector& v)
@@ -213,4 +191,9 @@ FVector FVector::operator+(float InF)
 	float _z = Z + InF;
 	const FVector vec(_x, _y, _z);
 	return vec;
+}
+
+bool FVector::operator==(FVector& v)
+{
+	return X == v.X && Y == v.Y && Z == v.Z;
 }
