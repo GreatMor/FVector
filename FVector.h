@@ -4,12 +4,13 @@
 #include <iosfwd>
 #include <sstream>
 
+template<class T>
 struct FVector
 {
-	//Constructors
+
 	FVector();
-	FVector(float InF);
-	FVector(float InX, float InY, float InZ);	
+	FVector(T InF);
+	FVector(T InX, T InY, T InZ);
 	
 	//Constants
 	static const FVector LeftVector;
@@ -29,7 +30,7 @@ struct FVector
 	FVector operator- (const FVector& v);
 
 	//Gets the result of subtracting from each component of the vector.
-	FVector operator- (float InF);
+	FVector operator- (T InF);
 
 	//Get a negated copy of the vector.
 	bool operator != (const FVector& v);
@@ -59,49 +60,67 @@ struct FVector
 	FVector operator/= (const FVector& v);
 
 	//Gets specific component of the vector.
-	float& operator[] (int index);
+	T& operator[] (int index);
 
 	//Gets specific component of the vector.
-	float operator[] (int index)const;
+	T operator[] (int index)const;
 
 	//Calculate cross product between this and another vector.
 	FVector operator^ (const FVector& v);
 
 	//Calculate the dot product between this and another vector.
-	float operator| (FVector& v);
+	T operator| (FVector& v);
 
 	//Gets the result of component-wise addition of this and another vector.
 	FVector operator+ (const FVector& v);
 
 	//Gets the result of adding to each component of the vector.
-	FVector operator+ (float InF);
+	FVector operator+ (T InF);
 
 	//Check against another vector for equality.
 	bool operator== (FVector& v);
 
-
-		///Functions
+	///Functions
 	std::string ToString();
+
 	void PrintVector();
 
 	//Checks whether all components of this vector are the same, within a tolerance.
 	bool AllComponentsEqual(float value) const;
 
 	//Get distance
-	static float Distance(FVector& v1, FVector v2);
+	static float Distance(FVector& v1, FVector& v2);
+
+	//Calculate the dot product of two vectors.
+	static T DotProduct(const FVector& v1, const FVector& v2);
+
+	//Check against another vector for equality, within specified error limits.
+	bool Equals(const FVector& v1, float Tolerance);
+
+	//Get a copy of this vector with absolute value of each component.
+	FVector GetAbs();
+
+	//Get the maximum absolute value of the vector's components.
+	T GetAbsMax();
+
+	//Get the minimum absolute value of the vector's components.
+	T GetAbsMin(); 
 
 	//Variabels
-	float X;
-	float Y;
-	float Z;
+	T X;
+	T Y;
+	T Z;
 };
+
 
 int main()
 {
-	FVector v(7, 3, -4);
-	FVector b(1, 0, 6);
-	float a = FVector::Distance(v,b);
-	std::cout <<a ;
+	FVector<int> v3(42, 12, 111);
+
+	v3.PrintVector();
+	FVector<int> v(v3.GetAbsMin());
+	v.PrintVector();
+	//FVector b(1, 0, 6);
 	
 }
 
